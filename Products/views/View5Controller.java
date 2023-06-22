@@ -90,7 +90,6 @@ public class View5Controller implements Initializable {
     // Goes to Cart.fxml
     public void gotoCart(ActionEvent event) throws IOException {
 
-        HomeController.count = 1;
 
         Parent root = FXMLLoader.load(getClass().getResource("/Products/Cart.fxml"));
         Scene scene = new Scene(root);
@@ -99,7 +98,7 @@ public class View5Controller implements Initializable {
         stage.show();
 
         
-      //  CartController.count = 1;
+
     }
 
     public void showInstruct(ActionEvent event) throws IOException { 

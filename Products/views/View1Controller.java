@@ -90,16 +90,15 @@ public class View1Controller implements Initializable {
     // Goes to Cart.fxml
     public void gotoCart(ActionEvent event) throws IOException {
 
-        HomeController.count = 1;
 
-        Parent root = FXMLLoader.load(getClass().getResource("/Products/Cart.fxml"));
-        Scene scene = new Scene(root);
+   
+        HomeController.cartController.showItems(HomeController.cart.getItemList());
+        HomeController.cartController.getInitialAmount();
+
+        Scene scene = new Scene(HomeController.homeRoot);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
-
-        
-        //CartController.count = 1;
     }
 
      public void showInstruct(ActionEvent event) throws IOException { 
@@ -118,15 +117,18 @@ public class View1Controller implements Initializable {
     // Adding items to cart
     public void buy(ActionEvent event) throws IOException {
 
-        AlertMaker.showSimpleAlert("Mabuhay!", "your item has been added on your cart. :D");
+        AlertMaker.showSimpleAlert("Mabuhay!", "Your item has been added on your cart. :D");
 
         Button sourceButton = (Button) event.getSource();
 
-     // If addtocart button is pressed, set product status to true
+        // If addtocart button is pressed, set product status to true
         if (sourceButton.equals(p1)) {
-            ProductController.product1.setProductStatus(true);
-            ProductController.product1.setProductQuantity(1);
+            HomeController.product1.setProductStatus(true);
+            HomeController.product1.setProductQuantity(1);
+            HomeController.cart.addItem(HomeController.cartController.pane1);
         }
+
+        HomeController.cart.showItems();
 
     }
     

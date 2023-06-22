@@ -5,7 +5,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import Alert.AlertMaker;
 import Home.HomeController;
+import Products.model.Cart;
 import Settings.SettingsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -78,13 +80,58 @@ public class CartController implements Initializable {
     ImageView img1, img2, img3, img4, img5, img6, img7, img8, img9;
 
     @FXML
-    private ChoiceBox<String> choiceBox1, choiceBox2, choiceBox3, choiceBox4, choiceBox5, choiceBox6, choiceBox7, choiceBox8, choiceBox9;
+    static
+    HomeController homeController = null;
+    
+    @FXML
+    static
+    CartController cartController = null;
 
+
+    @FXML
+    public ChoiceBox<String> choiceBox1;
+
+    @FXML
+    public ChoiceBox<String> choiceBox2;
+
+    @FXML
+    public ChoiceBox<String> choiceBox3;
+
+    @FXML
+    public ChoiceBox<String> choiceBox4;
+
+    @FXML
+    public ChoiceBox<String> choiceBox5;
+
+    @FXML
+    public ChoiceBox<String> choiceBox6;
+
+    @FXML
+    public ChoiceBox<String> choiceBox7;
+
+    @FXML
+    public ChoiceBox<String> choiceBox8;
+
+    @FXML
+    public ChoiceBox<String> choiceBox9;
+
+    @FXML
+    private Scene scene;
+
+    @FXML
+    public
+    static Parent homeRoot = null;
+
+    public static Cart cart = new Cart();
+
+    FXMLLoader loader;
 
     private String[] quantity = {"1", "2", "3"};
     
-    public static int count = 0;
+
     public static int cartGoBackCount = 0;
+
+    public static Double finalAmount = 0.00;
 
 
      @Override
@@ -165,8 +212,19 @@ public class CartController implements Initializable {
         choiceBox7.setOnAction(this::computeTotal);
         choiceBox8.setOnAction(this::computeTotal);
         choiceBox9.setOnAction(this::computeTotal);
-
         
+        try {
+            loader = new FXMLLoader(getClass().getResource("/Receipt/Receipt.fxml"));
+            homeRoot = loader.load();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+
+        }
+
+        // Clears all items in Checkout.fxml
+      
      }
 
 
@@ -300,7 +358,8 @@ public class CartController implements Initializable {
         
         // Display total amount in total label
         total.setText("₱ " + Double.toString(totalAmount));
-        
+
+        ProductController.cart.showItems();
     }
 
     public void getInitialAmount() {
@@ -356,6 +415,8 @@ public class CartController implements Initializable {
             stage.setScene(scene);
             stage.centerOnScreen();
             stage.show();
+
+            
         }
         
         else if (CartController.cartGoBackCount == 2) {
@@ -382,10 +443,44 @@ public class CartController implements Initializable {
         
     }
 
+    public void gotoReceipt(ActionEvent event) throws IOException {
+        
+        SettingsController.settingsGoBackCount = 3;
+
+        ProductController.cartController.showItems(ProductController.cart.getItemList());
+        ProductController.cartController.getInitialAmount();
+        
+        Scene scene = new Scene(CartController.homeRoot);
+
+        Parent root = FXMLLoader.load(getClass().getResource("/Receipt/Receipt.fxml"));
+        scene = new Scene(root);
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+        
+    }
+
+    public void showInstruct(ActionEvent event) throws IOException { 
+        AlertMaker.showInstructionsAlert("MABUHAY! :D", "Filodroids Company is a local Filipino company that manufactures and sells hobby products such as \nfigures. We handle everything from designing and making the products to marketing and distributing \nthem. Our unique creations are inspired by different generations of Filipino themes and culture.");
+
+   }
+
+   public void showAbout(ActionEvent event) throws IOException { 
+        AlertMaker.showAboutAlert("About us", 
+        
+        "GROUP 5 - FILODROIDS \nAgustin, Sherlene \nAngeles, Jason \nBabao, Lark \nValdez, Angelique");
+
+   }
+
+
+
+
     public void showItems(ArrayList<Pane> itemList) {
         for (Pane p : itemList) {
             
-            myVBox.getChildren().add(p);
+            if (!myVBox.getChildren().contains(p)) {
+                myVBox.getChildren().add(p);
+            }
         }
     }
 
